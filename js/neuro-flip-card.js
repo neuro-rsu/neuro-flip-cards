@@ -1,9 +1,33 @@
-import { LitElement, html, css } from "https://cdn.jsdelivr.net/gh/lit/dist@2/all/lit-all.min.js";
+import { FlipElement, html, css } from './lit-flip.js';
 
-class MyElement extends LitElement {
-    static properties = {
-        version: {},
-    };
+import '../components/button/button.js';
+
+import { ulid } from './utils.js';
+
+class FlipCards extends FlipElement {
+
+    static get properties() {
+        return {
+            row: { type: Number, default: 3, save: true, category: 'settings' },
+            column: { type: Number, default: 3, save: true, category: 'settings' },
+            mode: { type: String, default: 'images', save: true, category: 'settings' },
+            autoClose: { type: Boolean, default: true, category: 'settings' },
+            timeToClose: { type: Number, default: 750, category: 'settings' },
+            babyMode: { type: Boolean, default: false, save: true, category: 'settings' },
+            fontSize: { type: Number, default: 32 },
+            isOk: { type: Number, default: 0 },
+            isError: { type: Number, default: 0 },
+            step: { type: Number, default: 0 },
+            cards: { type: Array },
+            card1: { type: Object },
+            card2: { type: Object },
+            solved: { type: Array, default: [] },
+            end: { type: Boolean },
+        }
+    }
+    // static properties = {
+    //     version: {},
+    // };
 
     static styles = css`
         :host {
@@ -128,8 +152,11 @@ class MyElement extends LitElement {
                 .cell-front, .cell-back { font-size: ${14 + this.fontSize - 100 <= 14 ? 14 : 14 + this.fontSize - 100}px; }
             </style>
             <header>
-                <li-button name='remove' border='none' size=28 @click=${() => --this.row}></li-button><div class='txt'>${this.row}</div><li-button name='add' border='none' size=28  @click=${() => ++this.row}></li-button>
-                <li-button name='remove' border='none' size=28 @click=${() => --this.column} style='margin-left: 4px'></li-button><div class='txt'>${this.column}</div><li-button name='add' border='none' size=28  @click=${() => ++this.column}></li-button>
+                <flip-button name='remove' border='none' size=28 @click=${() => --this.row}></flip-button>
+                <div class='txt'>${this.row}</div>
+                <flip-button name='add' border='none' size=28  @click=${() => ++this.row}></flip-button>
+                <flip-button name='remove' border='none' size=28 @click=${() => --this.column} style='margin-left: 4px'></flip-button>
+                <div class='txt'>${this.column}</div><flip-button name='add' border='none' size=28  @click=${() => ++this.column}></flip-button>
                 <div style="display: flex; flex-direction: column; flex: 1; width: 100%">
                     <div class='txt' style="width: 100%; ">flips - ${this.mode}</div>
                     <div style="display: flex; width: 100%; justify-content: center; align-items: center">
@@ -138,9 +165,8 @@ class MyElement extends LitElement {
                         <div style="color: red; flex: 1; font-weight: 600; opacity: .5">${this.isError}</div>
                     </div>
                 </div>
-                <li-button name='face' border='none' size=28 @click=${() => this.babyMode = !this.babyMode} title='baby mode' toggledClass='ontoggled' ?toggled=${this.babyMode} style='margin: 0 8px 0 36px'></li-button>
-                <li-button name='extension' border='none' size=28 @click=${this.setMode} title='mode' style='margin-right: 8px'></li-button>
-                <li-button name='refresh' border='none' size=28 @click=${() => document.location.reload()} title='refresh' style='margin-right: 8px'></li-button>
+                <flip-button name='extension' border='none' size=28 @click=${this.setMode} title='mode' style='margin-right: 8px'></flip-button>
+                <flip-button name='refresh' border='none' size=28 @click=${() => document.location.reload()} title='refresh' style='margin-right: 8px'></flip-button>
             </header>
             <div id="board" class='board'>
                 ${[...Array(+this.row).keys()].map(row => html`
@@ -149,7 +175,7 @@ class MyElement extends LitElement {
                             let idx = this.column * row + column;
                             return html`
                                 <div class='cell ${(this.solved.includes(idx) || idx === this.card1?.id || idx === this.card2?.id) ? 'selected' : ''} ${this.solved.includes(idx) ? 'solved' : ''}'
-                                         @click=${e => this.onclick(e, idx, this.cards?.[idx])}>
+                                        @click=${e => this.onclick(e, idx, this.cards?.[idx])}>
                                     <div class='cell-inner'>
                                         <div class='cell-front ${idx === this.odd ? 'odd' : ''}' style="color: hsla(${this.cards?.[idx]?.c || 0}, 60%, 50%, 1);">
                                             ${this.mode === 'images' || this.mode === 'colors' || idx === this.odd ? html`
@@ -169,8 +195,11 @@ class MyElement extends LitElement {
                     </div>
                 `)}
             </div>
-
         `;
     }
 }
-customElements.define("my-element", MyElement);
+
+customElements.define("flip-cards", FlipCards);
+
+
+
