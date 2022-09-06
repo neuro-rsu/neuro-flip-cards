@@ -148,7 +148,12 @@ export class FlipElement extends LitElement {
         })
         return node;
     }
-
+    $qs(path) {
+        return this.renderRoot.querySelector(path);
+    }
+    $qsa(path) {
+        return Array.from(this.renderRoot.querySelectorAll(path));
+    }
     firstUpdated() {
         super.firstUpdated();
         if (this.args) Object.keys(this.args).forEach(k => this[k] = this.args[k]);
