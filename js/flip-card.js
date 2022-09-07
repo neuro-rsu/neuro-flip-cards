@@ -303,10 +303,14 @@ class FlipCards extends FlipElement {
         this.$update();
     }
     neuroClick() {
-        //let cells = this.renderRoot.querySelectorAll(".cell");
-        this.onclick(new CustomEvent("onclick", { bubbles: true, composed: true}), 0, this.cards?.[0])
+        let cells = this.renderRoot.querySelectorAll(".cell");
+        const id = Math.floor(Math.random() * cells.length);
+        if (id != this.odd)
+            cells[id].dispatchEvent(new CustomEvent("click", { bubbles: true, composed: true}));
+
+        //this.onclick(new CustomEvent("onclick", { bubbles: true, composed: true}), 0, this.cards?.[0])
         // cells.forEach(item => {
-        //     item.dispatchEvent(new CustomEvent("onclick", { bubbles: true, composed: true}));
+        //     item.dispatchEvent(new CustomEvent("click", { bubbles: true, composed: true}));
         //     console.log(item);
         // });
 
