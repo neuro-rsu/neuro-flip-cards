@@ -17,6 +17,7 @@ class FlipCards extends FlipElement {
             fontSize: { type: Number, default: 32 },
             isOk: { type: Number, default: 0 },
             isError: { type: Number, default: 0 },
+            isInit: { type: Boolean, default: true, category: 'settings' },
             step: { type: Number, default: 0 },
             cards: { type: Array },
             card1: { type: Object },
@@ -166,6 +167,7 @@ class FlipCards extends FlipElement {
                     </div>
                 </div>
                 <flip-button name='refresh' border='none' size=28 @click=${() => document.location.reload()} title='refresh' style='margin-right: 8px'></flip-button>
+                <flip-button name='face' border='none' size=28 @click=${() => this.neuroClick()} title='Нейросеть' style='margin-right: 8px'></flip-button>
             </header>
             <div id="board" class='board'>
                 ${[...Array(+this.row).keys()].map(row => html`
@@ -178,12 +180,12 @@ class FlipCards extends FlipElement {
                                     <div class='cell-inner'>
                                         <div class='cell-front ${idx === this.odd ? 'odd' : ''}' style="color: hsla(${this.cards?.[idx]?.c || 0}, 60%, 50%, 1);">
                                             ${html`
-                                                <img src=${this.cards?.[idx]?.v || this._url + 'flip.png'} style="width: 100%;max-height: 100%;">
+                                                <img src=${this.cards?.[idx]?.v || this._url + 'images/flip.png'} style="width: 100%;max-height: 100%;">
                                             `}
                                         </div>
                                         <div class='cell-back ${idx === this.odd ? 'odd' : ''}'>
                                             ${idx === this.odd ? html`
-                                                <img src=${this._url + 'flip.png'} style="width: 100%;max-height: 100%;">
+                                                <img src=${this._url + 'images/flip.png'} style="width: 100%;max-height: 100%;">
                                             ` : html``}
                                         </div>
                                     </div>
@@ -244,9 +246,22 @@ class FlipCards extends FlipElement {
         }
         this.odd && this.cards.splice(this.odd, 0, -1);
         this.$update();
+        this.isInit = false;
     }
     onclick(e, id, value) {
-        if (id === this.odd) return;
+        if (this.isInit) return;
+        if (id === this.odd) {
+            this.isInit = true;
+            if (this.solved?.length === 0 && this.card1 === undefined) {
+                this.init();
+            }
+            else {
+                this.card1 = this.card2 = undefined;
+                this.solved = [];
+                setTimeout(() => this.init(), 300);
+            }
+            return;
+        };
         if (!this.autoClose && this.card1 && this.card2) this.card1 = this.card2 = undefined;
         if (this.solved.includes(id) || this.card1?.id === id || value.v < 0) return;
         this.clickEffect ||= new Audio(this._url + 'audio/click.mp3');
@@ -258,6 +273,8 @@ class FlipCards extends FlipElement {
             if (this.card1.value.v === this.card2.value.v ) {
                 this.solved ||= [];
                 setTimeout(() => {
+                    if (this.card1 === undefined && this.card1 === undefined)
+                        return;
                     ++this.isOk;
                     this.solved.push(this.card1.id, this.card2.id);
                     this.card1 = this.card2 = undefined;
@@ -284,6 +301,15 @@ class FlipCards extends FlipElement {
             }
         }
         this.$update();
+    }
+    neuroClick() {
+        //let cells = this.renderRoot.querySelectorAll(".cell");
+        this.onclick(new CustomEvent("onclick", { bubbles: true, composed: true}), 0, this.cards?.[0])
+        // cells.forEach(item => {
+        //     item.dispatchEvent(new CustomEvent("onclick", { bubbles: true, composed: true}));
+        //     console.log(item);
+        // });
+
     }
 }
 
