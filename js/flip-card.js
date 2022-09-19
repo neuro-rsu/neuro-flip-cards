@@ -157,7 +157,8 @@ class FlipCards extends FlipElement {
                 <div class='txt'>${this.row}</div>
                 <flip-button name='add' border='none' size=28  @click=${() => ++this.row}></flip-button>
                 <flip-button name='remove' border='none' size=28 @click=${() => --this.column} style='margin-left: 4px'></flip-button>
-                <div class='txt'>${this.column}</div><flip-button name='add' border='none' size=28  @click=${() => ++this.column}></flip-button>
+                <div class='txt'>${this.column}</div>
+                <flip-button name='add' border='none' size=28  @click=${() => ++this.column}></flip-button>
                 <div style="display: flex; flex-direction: column; flex: 1; width: 100%">
                     <div class='txt' style="width: 100%; ">Flip Cards</div>
                     <div style="display: flex; width: 100%; justify-content: center; align-items: center">
