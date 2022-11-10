@@ -4,6 +4,8 @@ import '../components/button/button.js';
 import '../components/icon/icon.js';
 import confetti from "https://cdn.skypack.dev/canvas-confetti";
 
+
+
 import { ulid } from './utils.js';
 
 class FlipCards extends FlipElement {
@@ -168,6 +170,7 @@ class FlipCards extends FlipElement {
                 </div>
                 <flip-button name='refresh' border='none' size=28 @click=${() => document.location.reload()} title='refresh' style='margin-right: 8px'></flip-button>
                 <flip-button name='face' border='none' size=28 @click=${() => this.neuroClick()} title='Нейросеть' style='margin-right: 8px'></flip-button>
+                <flip-button name='screenshot' border='none' size=28 @click=${() => this.screenShort()} title='Скриншот' style='margin-right: 8px'></flip-button>
             </header>
             <div id="board" class='board'>
                 ${[...Array(+this.row).keys()].map(row => html`
@@ -314,6 +317,45 @@ class FlipCards extends FlipElement {
         //     console.log(item);
         // });
 
+    }
+
+    screenShort() {
+        html2canvas(document.querySelector('flip-cards')).then(function(canvas) {
+
+            const link = document.createElement('a');
+            link.download = 'download.png';
+            link.href = canvas.toDataURL();
+            link.click();
+            link.remove();
+
+            // var kMIMEType = "image/png";
+
+            // var blob = canvas.toBlobHD( callback, "image/png" );
+
+            // var a = document.createElement("a");
+            // document.body.appendChild(a);
+            // a.style.cssText = "display: none";
+
+            // // createObjectURL() will leak memory.
+            // var url = window.URL.createObjectURL(blob);
+            // a.href = url;
+            // a.download = 'my.png';
+            // a.click();
+            // window.URL.revokeObjectURL(url);
+
+            // a.parentNode.removeChild(a);
+
+            // document.body.appendChild(canvas);
+
+            // const link = document.createElement('a');
+            // link.download = 'download.png';
+            // link.href = canvas.toDataURL();
+            // link.click();
+            // link.delete;
+            // canvas.toBlob(function(blob) {
+            //      saveAs(blob, "Dashboard.png");
+            // });
+        });
     }
 }
 
