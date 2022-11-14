@@ -225,7 +225,10 @@ class FlipCards extends FlipElement {
         this.cards = [];
         const images = [];
         let url = this._url + 'cards/cards-';
-        for (let i = 1; i <= 140; i++) images.push(url + (i < 10 ? '00' + i : i < 100 ? '0' + i : i) + '.jpg');
+        for (let i = 1; i <= 140; i++) {
+            if (i === 1 || i === 17 || i === 88 || i === 140)
+            images.push(url + (i < 10 ? '00' + i : i < 100 ? '0' + i : i) + '.jpg');
+        }
         let length = (this.row * this.column) - (this.odd ? 1 : 0);
         this.step = 360 / (length / 2);
         let unique = [];
