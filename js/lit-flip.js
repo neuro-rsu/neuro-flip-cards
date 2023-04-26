@@ -9,19 +9,6 @@ import './icaro.js';
 
 const urlFLIP = import.meta.url;
 
-document.addEventListener('mousedown', (e) => FLIP.mousePos = new DOMRect(e.pageX, e.pageY));
-if (!window.FLIPRect) {
-    window.FLIPRect = function(element) {
-        if (element && element.host) element = element.host;
-        const pos = element ? element.getBoundingClientRect() : FLIP.mousePos;
-        return pos ? {
-            ok: true, x: pos.x, y: pos.y,
-            top: pos.top, bottom: pos.bottom, left: pos.left, right: pos.right,
-            width: pos.width, height: pos.height
-        } : { ok: false };
-    }
-}
-
 export class FlipElement extends LitElement {
     constructor() {
         super();
@@ -307,3 +294,16 @@ Object.defineProperty(Array.prototype, 'first', { enumerable: false, get() { ret
 Object.defineProperty(Array.prototype, 'last', { enumerable: false, get() { return this[this.length - 1] } })
 Object.defineProperty(Array.prototype, 'add', { enumerable: false, value: function(...item) { for (let i of item) { if (this.includes(i)) continue; this.push(i) } } })
 Object.defineProperty(Array.prototype, 'remove', { enumerable: false, value: function(...items) { for (const item of items) { const idx = this.indexOf(item); if (idx < 0) continue; this.splice(idx, 1) } } })
+
+document.addEventListener('mousedown', (e) => FLIP.mousePos = new DOMRect(e.pageX, e.pageY));
+if (!window.FLIPRect) {
+    window.FLIPRect = function(element) {
+        if (element && element.host) element = element.host;
+        const pos = element ? element.getBoundingClientRect() : FLIP.mousePos;
+        return pos ? {
+            ok: true, x: pos.x, y: pos.y,
+            top: pos.top, bottom: pos.bottom, left: pos.left, right: pos.right,
+            width: pos.width, height: pos.height
+        } : { ok: false };
+    }
+}

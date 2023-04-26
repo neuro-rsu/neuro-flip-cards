@@ -1,14 +1,6 @@
-import { FlipElement, html, css } from './lit-flip.js';
+import { LitElement, html, css } from * 'https://unpkg.com/lit@2.0.0/index.js?module';
 
-import '../components/button/button.js';
-import '../components/icon/icon.js';
-import confetti from "https://cdn.skypack.dev/canvas-confetti";
-
-
-
-import { ulid } from './utils.js';
-
-class FlipCards extends FlipElement {
+class FlipCards extends LitElement {
 
     static get properties() {
         return {
@@ -201,14 +193,23 @@ class FlipCards extends FlipElement {
         `;
     }
 
-    get _url() { return this.$url.replace('js/flip-cards.js', '') }
-    get odd() { return (this.row * this.column) % 2 === 0 ? '' : Math.floor(this.row * this.column / 2) }
-    get _fontSize() { return Math.min(this.$qs('#board').offsetWidth / this.column + this.column * 4, this.$qs('#board').offsetHeight / this.row + this.row * 4) }
     firstUpdated() {
         super.firstUpdated();
         setTimeout(() => this.init(), 100);
         window.addEventListener('resize', () => FLIP.throttle('resize', () => this.fontSize = this._fontSize, 300), false);
     }
+
+    updated(e) {
+        if (e.has('row') || e.has('column')) {
+            this.row = this.row < 2 ? 2 : this.row > 10 ? 10 : this.row;
+            this.column = this.column < 2 ? 2 : this.column > 10 ? 10 : this.column;
+        }
+        if (e.has('row') || e.has('column')) this.init();
+    }
+    get _url() { return this.$url.replace('js/flip-cards.js', '') }
+    get odd() { return (this.row * this.column) % 2 === 0 ? '' : Math.floor(this.row * this.column / 2) }
+    get _fontSize() { return Math.min(this.$qs('#board').offsetWidth / this.column + this.column * 4, this.$qs('#board').offsetHeight / this.row + this.row * 4) }
+
     updated(e) {
         if (e.has('row') || e.has('column')) {
             this.row = this.row < 2 ? 2 : this.row > 10 ? 10 : this.row;
