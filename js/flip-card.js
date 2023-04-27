@@ -1,7 +1,10 @@
-import { LitElement, html, css } from * 'https://unpkg.com/lit@2.0.0/index.js?module';
+import { FlipElement, html, css } from './lit-flip.js';
 
-class FlipCards extends LitElement {
+import '../components/button/button.js';
+import '../components/icon/icon.js';
+import confetti from "https://cdn.skypack.dev/canvas-confetti";
 
+class FlipCards extends FlipElement {
     static get properties() {
         return {
             row: { type: Number, default: 3, save: true, category: 'settings' },
@@ -210,13 +213,13 @@ class FlipCards extends LitElement {
     get odd() { return (this.row * this.column) % 2 === 0 ? '' : Math.floor(this.row * this.column / 2) }
     get _fontSize() { return Math.min(this.$qs('#board').offsetWidth / this.column + this.column * 4, this.$qs('#board').offsetHeight / this.row + this.row * 4) }
 
-    updated(e) {
-        if (e.has('row') || e.has('column')) {
-            this.row = this.row < 2 ? 2 : this.row > 10 ? 10 : this.row;
-            this.column = this.column < 2 ? 2 : this.column > 10 ? 10 : this.column;
-        }
-        if (e.has('row') || e.has('column')) this.init();
-    }
+    // updated(e) {
+    //     if (e.has('row') || e.has('column')) {
+    //         this.row = this.row < 2 ? 2 : this.row > 10 ? 10 : this.row;
+    //         this.column = this.column < 2 ? 2 : this.column > 10 ? 10 : this.column;
+    //     }
+    //     if (e.has('row') || e.has('column')) this.init();
+    // }
     init() {
         this._confetti && clearInterval(this._confetti);
         this.fontSize = this._fontSize;
